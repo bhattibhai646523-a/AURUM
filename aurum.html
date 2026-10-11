@@ -1,0 +1,349 @@
+<!doctype html>
+<head>
+<title>Aurum — Gold Trading Terminal</title>
+<style>
+:root{color-scheme:dark;--bg:#090d13;--panel:#101721;--panel2:#141e2a;--line:#243140;--text:#e9eff7;--muted:#8d9bad;--gold:#e6bd68;--green:#41d6a0;--red:#ff7185;--blue:#83b9ff;--shadow:0 16px 42px #0003}*{box-sizing:border-box}
+body
+{
+  margin:0;background:radial-gradient(ellipse at 65% -15%,#1d2a3b 0,transparent 40%),var(--bg);color:var(--text);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif
+}
+button,input,textarea,select
+{
+  font:inherit
+}
+button
+{
+  cursor:pointer
+}
+button:disabled
+{
+  opacity:.45;cursor:not-allowed
+}
+.shell
+{
+  min-height:100vh
+}
+.sidebar
+{
+  width:236px;position:fixed;inset:0 auto 0 0;background:#0b1119;border-right:1px solid var(--line);padding:24px 15px;display:flex;flex-direction:column;z-index:5
+}
+.brand
+{
+  display:flex;align-items:center;gap:11px;padding:0 10px 30px
+}
+.brandMark
+{
+  width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#f2d18b,#9f7129);display:grid;place-items:center;color:#17202a;font-size:22px;font-weight:900
+}
+.brand strong
+{
+  display:block;font-size:16px;letter-spacing:1.6px
+}
+.brand small
+{
+  color:var(--muted);font-size:10px;letter-spacing:2px
+}
+.navLabel
+{
+  font-size:10px;color:#657487;letter-spacing:1.8px;padding:8px 12px
+}
+.nav
+{
+  display:grid;gap:6px
+}
+.nav button
+{
+  background:transparent;border:1px solid transparent;color:#9cabbc;border-radius:10px;text-align:left;padding:12px 13px;display:flex;align-items:center;gap:12px
+}
+.nav button span
+{
+  width:20px;text-align:center;font-size:16px
+}
+.nav button:hover,.nav button.active
+{
+  background:#18222e;border-color:#2d3c4c;color:#f4d28a
+}
+.sidebarBottom
+{
+  margin-top:auto;border-top:1px solid var(--line);padding:17px 10px 0;color:var(--muted);font-size:11px
+}
+.secureDot
+{
+  display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;margin-right:7px
+}
+.main{margin-left:236px;min-height:100vh
+}
+.topbar
+{
+  height:74px;position:sticky;top:0;z-index:4;background:#090d13df;backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px
+}
+.eyebrow
+{
+  font-size:10px;letter-spacing:1.7px;color:var(--muted);text-transform:uppercase
+}
+.topTitle
+{
+  font-size:18px;font-weight:650;margin-top:2px
+}
+.topRight
+{
+  display:flex;align-items:center;gap:14px
+}
+.statusPill
+{
+  border:1px solid var(--line);border-radius:99px;padding:7px 11px;color:var(--muted);font-size:11px;display:flex;gap:7px;align-items:center
+}
+.statusPill .dot
+{
+  width:6px;height:6px;background:#718096;border-radius:50%
+}
+.statusPill.live .dot
+{
+  background:var(--green);box-shadow:0 0 10px #41d6a080
+}
+.avatar
+{
+  width:35px;height:35px;display:grid;place-items:center;border:1px solid #45515e;border-radius:50%;color:var(--gold);font-weight:700
+}
+.content
+{
+  max-width:1500px;padding:28px 30px 48px;margin:auto
+}
+.page
+{
+  display:none
+}
+.page.active
+{
+  display:block
+}
+.pageHead
+{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:22px
+}
+.pageHead h1
+{
+  font-size:26px;letter-spacing:-.7px;margin:3px 0 5px
+}
+.pageHead p
+{
+  color:var(--muted);margin:0
+}
+.button
+{
+  border:1px solid #344253;border-radius:9px;background:#17212d;color:var(--text);padding:10px 14px;font-weight:600;font-size:12px
+}
+.button:hover
+{
+  filter:brightness(1.15)
+}
+.button.gold
+{
+  background:linear-gradient(135deg,#f1d18d,#c89b47);color:#1a2028;border:0
+}
+.button.ghost
+{
+  background:transparent
+}
+.button.red
+{
+  background:#3a1c26;border-color:#64303e;color:#ff9aaa
+}
+.metrics
+{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:17px
+}
+.card
+{
+  background:linear-gradient(145deg,#121a25,#0f151e);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)
+}
+.metric
+{
+  padding:18px 19px;min-height:120px
+}
+.metricTop
+{
+  display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px
+}
+.metricIcon
+{
+  height:30px;width:30px;border:1px solid #2d3a49;border-radius:9px;display:grid;place-items:center;color:var(--gold)
+}
+.metricValue
+{
+  font-size:25px;letter-spacing:-.7px;font-weight:700;margin:11px 0 2px;font-variant-numeric:tabular-nums
+}
+.metricSub
+{
+  font-size:11px;color:var(--muted)
+}
+.green
+{
+  color:var(--green)!important
+}
+.redText
+{
+  color:var(--red)!important
+}
+.goldText
+{
+  color:var(--gold)!important
+}
+.layout
+{
+  display:grid;grid-template-columns:minmax(0,1.75fr) minmax(270px,.85fr);gap:16px
+}
+.cardHead
+{
+  padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px
+}
+.cardHead h2
+{
+  font-size:14px;margin:0;font-weight:650
+}
+.cardHead p
+{
+  font-size:11px;color:var(--muted);margin:4px 0 0
+}
+.chartActions
+{
+  display:flex;align-items:center;gap:8px
+}
+.select,input,textarea
+{
+  width:100%;background:#0b1119;border:1px solid #2a3848;color:var(--text);border-radius:9px;padding:11px 12px;outline:none
+}.select:focus,input:focus,textarea:focus
+{border-color:#b99552
+}.chartActions select
+{width:auto;padding:8px 10px;font-size:11px
+}.chartWrap
+{padding:12px 15px 5px;position:relative
+}.chartCanvas
+{width:100%;height:345px;display:block
+}.chartLegend
+{display:flex;gap:16px;flex-wrap:wrap;padding:0 20px 18px;color:var(--muted);font-size:11px
+}.legendItem
+{display:flex;align-items:center;gap:6px
+}.legendLine
+{height:2px;width:13px;background:var(--gold)
+}.legendLine.blue
+{background:var(--blue)
+}.legendLine.green
+{background:var(--green)
+}.signalCard
+{padding:20px;margin-bottom:15px
+}.signalHeader
+{display:flex;align-items:center;justify-content:space-between
+}
+.signalHeader h2
+{
+  font-size:14px;margin:0
+}.tag
+{
+  font-size:10px;letter-spacing:.8px;border-radius:6px;padding:5px 8px;background:#26303b;color:var(--muted)}.signalWord{font-size:34px;font-weight:800;letter-spacing:1px;margin:20px 0 2px}.signalExplain{color:var(--muted);font-size:12px}.signalRule{height:1px;background:var(--line);margin:18px 0}.signalRow{display:flex;justify-content:space-between;padding:7px 0;color:var(--muted);font-size:12px}.signalRow b{color:var(--text);font-weight:600}.tradeButtons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}.tradeButtons button{padding:12px 8px}.note{font-size:11px;color:var(--muted);margin-top:12px}.tableCard{margin-top:16px;overflow:hidden}.tableScroll{overflow:auto}table{border-collapse:collapse;width:100%;min-width:570px}th,td{text-align:left;padding:13px 18px;border-bottom:1px solid #202b38;font-size:12px}th{color:#8291a3;font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:600}td{color:#c7d1de}tbody tr:last-child td{border-bottom:0}.empty{text-align:center!important;padding:30px;color:var(--muted)}.statusLine{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--muted);font-size:11px;margin-top:11px}.formCard{padding:22px;max-width:760px}.formCard h2{margin:0 0 7px;font-size:16px}.formCard p{color:var(--muted);font-size:12px;margin:0 0 20px}.field{display:grid;gap:7px;margin:15px 0}.field label{font-size:11px;color:#a8b5c4}.help{font-size:11px;color:var(--muted)}.chatLayout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px}.chatCard{min-height:530px;display:flex;flex-direction:column}.chatMessages{padding:20px;display:flex;flex-direction:column;gap:12px;flex:1;min-height:330px;max-height:480px;overflow:auto}.message{max-width:85%;padding:12px 14px;border:1px solid #293747;background:#151f2b;border-radius:12px;color:#dce5ef;white-space:pre-wrap;overflow-wrap:anywhere}.message.user{align-self:flex-end;background:#30291c;border-color:#655333}.chatCompose{display:flex;gap:9px;padding:14px;border-top:1px solid var(--line)}.chatCompose textarea{resize:vertical;min-height:45px;max-height:120px}.infoPanel{padding:18px}.infoPanel h3{font-size:13px;margin:0 0 10px}.infoPanel p,.infoPanel li{font-size:12px;color:var(--muted)}.infoPanel ul{padding-left:18px}.notice{border:1px solid #5a4828;background:#211c13;color:#dfc58c;padding:12px 14px;border-radius:10px;font-size:12px;margin-bottom:17px}.roomGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.roomCard{padding:20px}.roomIcon{font-size:24px;margin-bottom:14px}.roomCard h3{margin:0 0 7px;font-size:15px}.roomCard p{font-size:12px;color:var(--muted);min-height:52px}.roomCard .button{width:100%}.videoBox{background:#05080c;border:1px solid var(--line);border-radius:13px;min-height:260px;display:grid;place-items:center;color:var(--muted);margin:18px 0;overflow:hidden}.videoBox video{width:100%;max-height:450px;display:none}.hidden{display:none!important}.footerNote{color:#647386;font-size:10px;text-align:center;margin-top:25px}.mobileMenu{display:none}.toast{position:fixed;right:20px;bottom:20px;z-index:30;background:#17212d;border:1px solid #394a5c;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);max-width:min(400px,calc(100vw - 40px));font-size:12px}
+@media(max-width:1100px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}.roomGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.chatLayout{grid-template-columns:1fr}.infoPanel{display:grid;grid-template-columns:1fr 1fr;gap:18px}}@media(max-width:760px){.sidebar{transform:translateX(-100%);transition:transform .2s;width:250px;box-shadow:var(--shadow)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.topbar{height:65px;padding:0 16px}.content{padding:20px 14px 35px}.mobileMenu{display:inline-flex;margin-right:10px;background:none;border:0;color:var(--text);font-size:22px}.topTitle{font-size:15px}.topbarLeft{display:flex;align-items:center}.topRight .statusPill{display:none}.pageHead{align-items:flex-start;flex-direction:column}.pageHead h1{font-size:23px}.metrics{gap:9px}.metric{padding:13px;min-height:108px}.metricValue{font-size:21px}.chartCanvas{height:280px}.chartActions{gap:5px}.cardHead{padding:15px}.roomGrid{grid-template-columns:1fr}.infoPanel{display:block}.signalCard{padding:16px}.signalWord{font-size:30px}}@media(max-width:420px){.metrics{grid-template-columns:1fr 1fr}.metricTop{font-size:10px}.metricIcon{display:none}.metricValue{font-size:19px}.chartActions select{max-width:82px}.chartActions .button{padding:8px;font-size:10px}.topRight .avatar{display:none}.statusLine{align-items:flex-start;flex-direction:column}}
+
+/* Theme packs + motion */
+:root{--accent:var(--gold);--accent2:var(--blue)}
+body[data-theme="violet"]{--bg:#100c1b;--panel:#191329;--panel2:#241a38;--line:#3b2d55;--gold:#c7a4ff;--green:#67e8c1;--blue:#8da8ff}
+body[data-theme="ocean"]{--bg:#07141b;--panel:#0d2029;--panel2:#12313d;--line:#244958;--gold:#5ee7df;--green:#83f0b5;--blue:#79baff}
+body[data-theme="emerald"]{--bg:#08150f;--panel:#102219;--panel2:#173324;--line:#28513b;--gold:#8ee6a1;--green:#65f0ae;--blue:#8bd9e8}
+body[data-theme="rose"]{--bg:#1a0c14;--panel:#26131e;--panel2:#351b2a;--line:#553044;--gold:#ff9fc4;--green:#82e8bd;--blue:#b8a0ff}
+body[data-theme="sunset"]{--bg:#1b100b;--panel:#281810;--panel2:#392216;--line:#5c3825;--gold:#ffb36b;--green:#a8e887;--blue:#83caff}
+body[data-theme="midnight"]{--bg:#080c18;--panel:#10182b;--panel2:#18233c;--line:#2c3c61;--gold:#7dd3fc;--green:#6ee7b7;--blue:#a5b4fc}
+body[data-theme] .brandMark{background:linear-gradient(135deg,var(--gold),var(--blue));color:#10131b}
+body[data-theme] .nav button:hover,body[data-theme] .nav button.active{background:color-mix(in srgb,var(--gold) 12%,var(--panel));border-color:color-mix(in srgb,var(--gold) 40%,var(--line));color:var(--gold)}
+body[data-theme] .button.gold{background:linear-gradient(135deg,var(--gold),var(--blue));color:#10131b}
+body[data-theme] .metricIcon,body[data-theme] .avatar{color:var(--gold)}
+body[data-theme] .select:focus,body[data-theme] input:focus,body[data-theme] textarea:focus{border-color:var(--gold)}
+body[data-theme] .card{background:linear-gradient(145deg,var(--panel2),var(--panel));}
+body[data-theme] .message.user{background:color-mix(in srgb,var(--gold) 13%,var(--panel));border-color:color-mix(in srgb,var(--gold) 35%,var(--line))}
+*{scrollbar-color:var(--line) var(--bg)}
+.card,.button,.metric,.roomCard,.nav button{transition:transform .22s ease,border-color .22s ease,background .22s ease,box-shadow .22s ease}
+.card:hover{border-color:color-mix(in srgb,var(--gold) 28%,var(--line));box-shadow:0 18px 48px #0004}
+.button:hover{transform:translateY(-1px)}
+.page.active{animation:pageIn .42s cubic-bezier(.2,.75,.2,1) both}
+.metric{animation:riseIn .55s both}.metric:nth-child(2){animation-delay:.07s}.metric:nth-child(3){animation-delay:.14s}.metric:nth-child(4){animation-delay:.21s}
+@keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes riseIn{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--gold) 0%,transparent)}50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--gold) 10%,transparent)}}
+.loginScreen{min-height:100vh;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr);background:radial-gradient(ellipse at 20% 15%,color-mix(in srgb,var(--gold) 16%,transparent),transparent 36%),radial-gradient(ellipse at 80% 85%,color-mix(in srgb,var(--blue) 16%,transparent),transparent 38%),var(--bg);overflow:hidden;position:relative}
+.loginScreen:before,.loginScreen:after{content:"";position:absolute;width:340px;height:340px;border-radius:50%;filter:blur(1px);pointer-events:none;animation:floatOrb 12s ease-in-out infinite alternate}
+.loginScreen:before{background:radial-gradient(circle,color-mix(in srgb,var(--gold) 18%,transparent),transparent 68%);left:-110px;bottom:-90px}.loginScreen:after{background:radial-gradient(circle,color-mix(in srgb,var(--blue) 16%,transparent),transparent 68%);right:24%;top:-140px;animation-delay:-5s}
+@keyframes floatOrb{from{transform:translate3d(0,0,0) scale(.9)}to{transform:translate3d(35px,-24px,0) scale(1.12)}}
+.loginShowcase{padding:clamp(28px,6vw,84px);display:flex;flex-direction:column;justify-content:space-between;position:relative;z-index:1}
+.loginBrand{display:flex;align-items:center;gap:13px;font-weight:800;letter-spacing:2px;font-size:17px}.loginBrand .brandMark{width:48px;height:48px;font-size:27px;border-radius:15px;animation:pulseGlow 3s infinite}
+.loginHero{max-width:650px;margin:55px 0}.loginHero .eyebrow{color:var(--gold)}.loginHero h1{font-size:clamp(42px,6vw,78px);line-height:1.02;letter-spacing:-3px;margin:16px 0 20px}.loginHero h1 span{background:linear-gradient(110deg,var(--gold),var(--blue),var(--green));background-clip:text;-webkit-background-clip:text;color:transparent}.loginHero p{font-size:15px;line-height:1.8;max-width:490px;color:var(--muted)}
+.loginFeatures{display:flex;gap:10px;flex-wrap:wrap}.loginFeature{border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 72%,transparent);border-radius:99px;padding:9px 12px;color:var(--muted);font-size:11px;backdrop-filter:blur(10px)}
+.loginPanelWrap{display:grid;place-items:center;padding:30px;position:relative;z-index:2}.loginPanel{width:min(100%,430px);border:1px solid color-mix(in srgb,var(--gold) 22%,var(--line));border-radius:24px;padding:clamp(24px,4vw,38px);background:color-mix(in srgb,var(--panel) 90%,transparent);box-shadow:0 28px 90px #0006;backdrop-filter:blur(22px);animation:riseIn .7s both}
+.loginPanel h2{font-size:27px;letter-spacing:-.8px;margin:0 0 7px}.loginPanel>p{color:var(--muted);font-size:12px;margin:0 0 25px}.loginPanel .field{margin:17px 0}.loginPanel .field label{font-size:12px}.loginPanel input{padding:14px 13px;background:color-mix(in srgb,var(--bg) 78%,transparent);border-color:var(--line)}.loginSubmit{width:100%;padding:14px;margin-top:8px;font-size:13px}.loginError{color:var(--red);font-size:12px;min-height:18px;margin-top:10px}.loginFine{font-size:10px;color:var(--muted);line-height:1.6;margin-top:17px}.themeSelect{width:auto;min-width:115px;padding:8px 10px;font-size:11px}
+@media(max-width:850px){.loginScreen{grid-template-columns:1fr}.loginShowcase{padding:26px 24px 0}.loginHero{margin:35px 0 20px}.loginHero h1{font-size:clamp(42px,10vw,62px)}.loginShowcase .loginFeatures{display:none}.loginPanelWrap{padding:24px}.loginScreen:after{right:-100px}}
+
+.themePicker{display:flex;align-items:center;gap:7px;color:var(--gold);border:1px solid var(--line);border-radius:10px;padding:0 8px;background:var(--panel);min-width:0}.themeSelect{width:auto;min-width:110px;max-width:145px;padding:8px 4px;border:0;background:transparent;color:var(--text);font-size:11px;cursor:pointer}.themeSelect option{background:#101721;color:#fff}.logoutBtn{font:700 11px/1 system-ui;cursor:pointer;background:linear-gradient(135deg,var(--gold),var(--blue));color:#0b1119;border:0;transition:transform .2s,box-shadow .2s}.logoutBtn:hover{transform:rotate(-7deg) scale(1.06);box-shadow:0 0 22px color-mix(in srgb,var(--gold) 40%,transparent)}
+#appShell:not(.hidden){animation:shellReveal .55s ease both}.sidebar .nav button{animation:navReveal .42s both}.sidebar .nav button:nth-child(2){animation-delay:.04s}.sidebar .nav button:nth-child(3){animation-delay:.08s}.sidebar .nav button:nth-child(4){animation-delay:.12s}.sidebar .nav button:nth-child(5){animation-delay:.16s}
+@keyframes shellReveal{from{opacity:0;filter:blur(4px)}to{opacity:1;filter:blur(0)}}@keyframes navReveal{from{opacity:0;transform:translateX(-9px)}to{opacity:1;transform:translateX(0)}}
+@media(max-width:760px){.topRight{gap:7px}.themePicker{gap:3px;padding:0 5px}.themeSelect{min-width:80px;max-width:95px;font-size:10px}.topRight .statusPill{display:none}.logoutBtn{width:32px;height:32px;min-width:32px}}
+@media(max-width:420px){.topbar{padding:0 10px}.themePicker>span{display:none}.themeSelect{min-width:74px;max-width:82px;padding:8px 1px}.topTitle{font-size:13px}.topbar .eyebrow{font-size:8px}.content{padding:16px 10px 28px}.loginPanelWrap{padding:16px}.loginPanel{padding:23px 19px}.loginHero h1{letter-spacing:-1.8px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+</style>
+</head>
+<body>
+<section class="loginScreen" id="loginScreen">
+  <div class="loginShowcase">
+    <div class="loginBrand"><span class="brandMark">A</span><span>AURUM <small style="display:block;color:var(--muted);font-size:9px;letter-spacing:3px;font-weight:500">GOLD TERMINAL</small></span></div>
+    <div class="loginHero"><div class="eyebrow">MARKET INTELLIGENCE · XAU/USD</div><h1>Trade with<br><span>clarity.</span></h1><p>A focused gold-market workspace with live provider candles, technical indicators, and a clean paper-trading workflow.</p><div class="loginFeatures"><span class="loginFeature">✦ Live market feed</span><span class="loginFeature">⌁ Technical analysis</span><span class="loginFeature">◈ Multiple themes</span></div></div>
+    <div class="help">Aurum Terminal · Market data availability depends on your configured provider plan.</div>
+  </div>
+  <div class="loginPanelWrap"><form class="loginPanel" id="loginForm"><div class="eyebrow" style="margin-bottom:12px">WELCOME BACK</div><h2>Sign in to Aurum</h2><p>Enter your details to open your trading workspace.</p><div class="field"><label for="loginEmail">Email address</label><input id="loginEmail" type="email" placeholder="you@example.com" autocomplete="username" required></div><div class="field"><label for="loginPassword">Password</label><input id="loginPassword" type="password" placeholder="At least 6 characters" autocomplete="current-password" minlength="6" required></div><button class="button gold loginSubmit" type="submit">Continue to terminal <span aria-hidden="true">→</span></button><div class="loginError" id="loginError" role="status"></div><div class="loginFine">Prototype login screen: this static GitHub Pages version only gates the interface in this browser. It does not verify an account or provide secure user authentication. Do not enter a real or reused password.</div></form></div>
+</section>
+<div class="shell hidden" id="appShell">
+<aside class="sidebar" id="sidebar"><div class="brand"><div class="brandMark">A</div><div><strong>AURUM</strong><small>MARKET INTELLIGENCE</small></div></div>
+<div class="navLabel">WORKSPACE</div><nav class="nav"><button class="active" data-page="trading"><span>◫</span>Trading terminal</button><button data-page="assistant"><span>✧</span>JARVIS assistant</button><button data-page="paper"><span>▤</span>Paper trade history</button><button data-page="rooms"><span>◎</span>Live rooms</button><button data-page="settings"><span>⚙</span>Settings & connection</button></nav>
+<div class="sidebarBottom"><div><span class="secureDot"></span>Single-file mode · API keys in browser</div><p>Market data can be delayed by your provider. Signals are informational, not financial advice.</p></div></aside>
+<main class="main"><header class="topbar"><div class="topbarLeft"><button class="mobileMenu" id="mobileMenu" aria-label="Open navigation">☰</button><div><div class="eyebrow">Market workspace</div><div class="topTitle" id="topTitle">Trading terminal</div></div></div><div class="topRight"><div class="statusPill" id="connectionPill"><span class="dot"></span><span id="connectionText">Not connected</span></div><label class="themePicker" title="Choose dashboard colors"><span aria-hidden="true">◐</span><select class="themeSelect" id="themeSelect" aria-label="Color theme"><option value="gold">Gold Luxe</option><option value="violet">Violet Neon</option><option value="ocean">Ocean Glass</option><option value="emerald">Emerald</option><option value="rose">Rose Quartz</option><option value="sunset">Sunset</option><option value="midnight">Midnight Blue</option></select></label><button class="avatar logoutBtn" id="logoutBtn" type="button" title="Sign out" aria-label="Sign out">AU</button></div></header>
+<div class="content">
+<section class="page active" id="page-trading"><div class="pageHead"><div><div class="eyebrow">XAU / USD · Spot gold</div><h1>Gold market overview</h1><p>Live provider data only. If data is unavailable, the terminal shows an error instead of simulated prices.</p></div><button class="button gold" id="refreshBtn">↻ Refresh market</button></div>
+<div class="notice" id="marketNotice">Add your Twelve Data API key in Settings to load real market data. No fake prices are shown.</div>
+<div class="metrics"><article class="card metric"><div class="metricTop">Gold price <span class="metricIcon">◇</span></div><div class="metricValue" id="price">—</div><div class="metricSub" id="priceSub">Waiting for provider</div></article><article class="card metric"><div class="metricTop">Market change <span class="metricIcon">↗</span></div><div class="metricValue" id="change">—</div><div class="metricSub">Compared with previous candle</div></article><article class="card metric"><div class="metricTop">Trend bias <span class="metricIcon">⌁</span></div><div class="metricValue" id="trend">—</div><div class="metricSub">Calculated from fetched candles</div></article><article class="card metric"><div class="metricTop">RSI (14) <span class="metricIcon">◌</span></div><div class="metricValue" id="rsi">—</div><div class="metricSub" id="rsiSub">Waiting for candles</div></article></div>
+<div class="layout"><div><article class="card"><div class="cardHead"><div><h2>XAU/USD · Candlestick chart</h2><p id="chartSubtitle">Waiting for market data</p></div><div class="chartActions"><select id="intervalSelect" aria-label="Chart timeframe"><option value="1min">1m</option><option value="5min">5m</option><option value="15min">15m</option><option value="1h">1h</option></select><button class="button ghost" id="chartRefresh">Refresh</button></div></div><div class="chartWrap"><canvas id="chart" class="chartCanvas" aria-label="Gold candlestick chart"></canvas></div><div class="chartLegend"><span class="legendItem"><i class="legendLine"></i>EMA 20</span><span class="legendItem"><i class="legendLine blue"></i>EMA 50</span><span class="legendItem"><i class="legendLine green"></i>Positive candle</span><span id="chartStamp">No data loaded</span></div></article>
+<article class="card tableCard"><div class="cardHead"><div><h2>Technical signals</h2><p>Computed from the same provider candles shown above</p></div><span class="tag">RULE-BASED</span></div><div class="tableScroll"><table><thead><tr><th>Indicator</th><th>Reading</th><th>Interpretation</th><th>Status</th></tr></thead><tbody id="analysisTable"><tr><td colspan="4" class="empty">Waiting for real market data.</td></tr></tbody></table></div></article></div>
+<div><article class="card signalCard"><div class="signalHeader"><h2>Trade decision</h2><span class="tag" id="signalTag">NO DATA</span></div><div class="signalWord" id="signal">WAIT</div><div class="signalExplain" id="signalReason">Add your Twelve Data API key in Settings to calculate a signal.</div><div class="signalRule"></div><div class="signalRow"><span>EMA 20</span><b id="ema20">—</b></div><div class="signalRow"><span>EMA 50</span><b id="ema50">—</b></div><div class="signalRow"><span>MACD</span><b id="macd">—</b></div><div class="signalRow"><span>Support (lookback)</span><b id="support">—</b></div><div class="signalRow"><span>Resistance (lookback)</span><b id="resistance">—</b></div><div class="tradeButtons"><button class="button" id="paperBuy" disabled>＋ Paper buy</button><button class="button red" id="paperSell" disabled>− Paper sell</button></div><div class="note">Paper trades only. No broker orders are sent. Signal is not a guarantee of future movement.</div></article>
+<article class="card signalCard"><div class="signalHeader"><h2>Data health</h2><span class="tag" id="dataTag">OFFLINE</span></div><div class="signalRow"><span>Provider</span><b>Twelve Data</b></div><div class="signalRow"><span>Refresh interval</span><b>30 seconds</b></div><div class="signalRow"><span>Last successful update</span><b id="lastUpdate">—</b></div><div class="signalRow"><span>Candles received</span><b id="candleCount">0</b></div><div class="note">Provider quotas and market-data entitlements apply. Auto-refresh pauses while this tab is hidden.</div></article></div></div></section>
+<section class="page" id="page-assistant"><div class="pageHead"><div><div class="eyebrow">AI workspace</div><h1>JARVIS assistant</h1><p>Optional Gemini chat runs directly from this browser. API key is not private on a public website.</p></div></div><div class="notice">JARVIS needs an optional Gemini API key saved in Settings. AI output can be wrong; do not treat it as verified market advice.</div><div class="chatLayout"><article class="card chatCard"><div class="cardHead"><div><h2>Conversation</h2><p>Direct browser connection</p></div><button class="button ghost" id="clearChat">Clear chat</button></div><div class="chatMessages" id="chatMessages"><div class="message">Hello. Add your Gemini API key in Settings, then ask a question.</div></div><form class="chatCompose" id="chatForm"><textarea id="chatInput" maxlength="4000" placeholder="Ask JARVIS a question…" aria-label="Message JARVIS"></textarea><button class="button gold" id="sendChat" type="submit">Send ↗</button></form></article><aside class="card infoPanel"><div><h3>Capabilities</h3><ul><li>Explain technical indicators</li><li>Help interpret provided market context</li><li>General research and coding assistance</li></ul></div><div><h3>Privacy & limits</h3><p>Do not enter passwords, broker credentials, or private API keys in chat. The backend enforces request limits, but a public endpoint can still be called by other people.</p></div></aside></div></section>
+<section class="page" id="page-paper"><div class="pageHead"><div><div class="eyebrow">Simulation only</div><h1>Paper trade history</h1><p>Stored in this browser only. It is not a broker statement or real trading activity.</p></div><button class="button red" id="clearHistory">Clear history</button></div><article class="card tableCard" style="margin-top:0"><div class="tableScroll"><table><thead><tr><th>Time</th><th>Symbol</th><th>Action</th><th>Price</th><th>Timeframe</th></tr></thead><tbody id="historyTable"><tr><td colspan="5" class="empty">No paper trades recorded.</td></tr></tbody></table></div></article></section>
+<section class="page" id="page-rooms"><div class="pageHead"><div><div class="eyebrow">Community</div><h1>Live rooms</h1><p>Room UI and local camera preview are not a multi-user video-call system.</p></div></div><div class="notice">Actual cross-user chat and audio/video require a signalling server plus WebRTC infrastructure (or a dedicated provider). This page does not pretend that other participants are connected.</div><div class="roomGrid"><article class="card roomCard"><div class="roomIcon">◉</div><h3>Gold market room</h3><p>Discussion room placeholder. Multi-user messaging is not connected yet.</p><button class="button" data-room="Gold market">Open room preview</button></article><article class="card roomCard"><div class="roomIcon">◌</div><h3>Trading learners</h3><p>Community room placeholder for a future real-time messaging backend.</p><button class="button" data-room="Trading learners">Open room preview</button></article><article class="card roomCard"><div class="roomIcon">⌁</div><h3>Private study room</h3><p>Local media preview only; no remote participants are connected.</p><button class="button" data-room="Private study">Open room preview</button></article></div><div class="card formCard hidden" id="roomPreview" style="margin-top:16px"><div class="signalHeader"><h2 id="roomTitle">Room preview</h2><button class="button ghost" id="closeRoom">Close</button></div><div class="videoBox"><video id="localVideo" autoplay playsinline muted></video><div id="videoPlaceholder">Camera preview has not started.</div></div><div style="display:flex;gap:9px;flex-wrap:wrap"><button class="button" id="cameraStart">Start local camera preview</button><button class="button" id="cameraStop">Stop camera</button></div><p class="help" id="cameraStatus">Camera permission is only requested after you click start.</p></div></section>
+<section class="page" id="page-settings"><div class="pageHead"><div><div class="eyebrow">Configuration</div><h1>Settings & connection</h1><p>Single-file setup: enter your provider keys here; no separate backend.</p></div></div><article class="card formCard"><h2>Market data · Twelve Data</h2><p>Enter your Twelve Data API key to load XAU/USD candles and calculate indicators.</p><form id="apiForm"><div class="field"><label for="marketApiKey">Twelve Data API key</label><input id="marketApiKey" type="password" placeholder="Paste Twelve Data API key" autocomplete="off"><div class="help">Saved in this browser only. On a public website, visitors can inspect browser requests and may expose this key.</div></div><div class="field"><label for="marketSymbol">Market symbol</label><input id="marketSymbol" value="XAU/USD" autocomplete="off"></div><div style="display:flex;gap:9px;flex-wrap:wrap"><button class="button gold" type="submit">Save & connect</button><button class="button ghost" type="button" id="forgetBackend">Remove saved keys</button></div></form><div class="statusLine"><span id="backendStatus">API key not configured</span><span id="healthBadge">NOT CONNECTED</span></div></article><article class="card formCard" style="margin-top:16px"><h2>Optional · JARVIS AI</h2><p>Gemini API key is optional and only needed for AI chat.</p><div class="field"><label for="geminiApiKey">Gemini API key</label><input id="geminiApiKey" type="password" placeholder="Paste Gemini API key" autocomplete="off"></div><div class="field"><label for="geminiModel">Gemini model</label><input id="geminiModel" value="gemini-2.5-flash" autocomplete="off"></div><button class="button" id="saveGemini" type="button">Save Gemini settings</button><div class="notice" style="margin-top:14px">Security note: a browser-only app cannot keep API keys secret. Use provider restrictions/quotas, and do not publish a key in the HTML source. Live room UI is a local preview, not a real multi-user call system.</div></article></section>
+<div class="footerNote">AURUM TERMINAL · REAL PROVIDER DATA ONLY · PAPER MODE · NOT FINANCIAL ADVICE</div>
+</div></main></div><div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);const state={backend:'',apiKey:localStorage.getItem('aurum_twelve_key')||'',symbol:localStorage.getItem('aurum_symbol')||'XAU/USD',geminiKey:localStorage.getItem('aurum_gemini_key')||'',geminiModel:localStorage.getItem('aurum_gemini_model')||'gemini-2.5-flash',candles:[],price:null,signal:'WAIT',interval:'1min',busy:false,lastUpdate:null,refreshTimer:null,stream:null};
+const money=n=>Number.isFinite(n)?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.remove('hidden');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.add('hidden'),4200)}
+function setConnection(ok,msg){$('connectionPill').classList.toggle('live',ok);$('connectionText').textContent=msg}
+function apiUrl(path){return state.backend.replace(/\/$/,'')+path}
+async function request(path,options={}){throw new Error('Backend is disabled in this single-file version.');}
+function ema(values,period){if(values.length<period)return null;const k=2/(period+1);let v=values.slice(0,period).reduce((a,b)=>a+b,0)/period;const out=Array(period-1).fill(null);out.push(v);for(let i=period;i<values.length;i++){v=values[i]*k+v*(1-k);out.push(v)}return out}
+function rsi(values,period=14){if(values.length<=period)return null;let gains=0,losses=0;for(let i=1;i<=period;i++){const d=values[i]-values[i-1];if(d>=0)gains+=d;else losses-=d}let avgG=gains/period,avgL=losses/period;for(let i=period+1;i<values.length;i++){const d=values[i]-values[i-1];avgG=(avgG*(period-1)+Math.max(d,0))/period;avgL=(avgL*(period-1)+Math.max(-d,0))/period}if(avgL===0)return 100;return 100-100/(1+avgG/avgL)}
+function analyze(candles){const closes=candles.map(c=>c.close);const e20=ema(closes,20),e50=ema(closes,50),r=rsi(closes);const e12=ema(closes,12),e26=ema(closes,26);let m=null;if(e12&&e26)m=e12[e12.length-1]-e26[e26.length-1];const support=Math.min(...candles.slice(-20).map(c=>c.low)),resistance=Math.max(...candles.slice(-20).map(c=>c.high));let score=0;if(e20&&e50){if(e20.at(-1)>e50.at(-1))score++;else score--}if(r!==null){if(r>=52&&r<68)score++;else if(r<=48&&r>32)score--;else if(r>=70||r<=30)score+=0}if(m!==null){if(m>0)score++;else if(m<0)score--}let signal='WAIT';if(candles.length>=50&&score>=2&&r!==null&&r<70)signal='BUY';if(candles.length>=50&&score<=-2&&r!==null&&r>30)signal='SELL';return {e20:e20?.at(-1)??null,e50:e50?.at(-1)??null,rsi:r,macd:m,support,resistance,score,signal,trend:score>=1?'BULLISH':score<=-1?'BEARISH':'MIXED'}}
+function fmt(v){return Number.isFinite(v)?money(v):'—'}
+function renderAnalysis(a){$('ema20').textContent=fmt(a.e20);$('ema50').textContent=fmt(a.e50);$('rsi').textContent=a.rsi===null?'—':a.rsi.toFixed(1);$('rsiSub').textContent=a.rsi===null?'Not enough candles':a.rsi>70?'Potentially overbought':a.rsi<30?'Potentially oversold':'Momentum indicator';$('macd').textContent=fmt(a.macd);$('support').textContent=fmt(a.support);$('resistance').textContent=fmt(a.resistance);$('trend').textContent=a.trend;$('signal').textContent=a.signal;$('signal').className='signalWord '+(a.signal==='BUY'?'green':a.signal==='SELL'?'redText':'goldText');$('signalTag').textContent=a.signal;$('signalReason').textContent=state.candles.length<50?'Need at least 50 real candles for a signal.':a.signal==='WAIT'?'Signals are mixed or lack confirmation; waiting is safer than forcing a trade.':`Rule-based ${a.signal.toLowerCase()} bias from EMA, RSI and MACD. Not a probability or guarantee.`;$('paperBuy').disabled=!state.price;$('paperSell').disabled=!state.price;$('analysisTable').innerHTML=[['EMA 20 / 50',`${fmt(a.e20)} / ${fmt(a.e50)}`,a.e20&&a.e50?(a.e20>a.e50?'Bullish cross bias':'Bearish cross bias'):'Insufficient candles'],['RSI (14)',a.rsi===null?'—':a.rsi.toFixed(1),a.rsi===null?'Insufficient candles':a.rsi>=70?'Potentially overbought':a.rsi<=30?'Potentially oversold':'Momentum range'],['MACD line',fmt(a.macd),a.macd===null?'Insufficient candles':a.macd>0?'Above zero':'Below zero'],['Combined rule',a.signal,'Rule-based; not validated prediction']].map(row=>`<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[0]==='Combined rule'?'<span class="goldText">Informational</span>':'Calculated'}</td></tr>`).join('')}
+function drawChart(){const canvas=$('chart'),ctx=canvas.getContext('2d'),rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.max(1,Math.floor(rect.width*dpr));canvas.height=Math.max(1,Math.floor(rect.height*dpr));ctx.scale(dpr,dpr);const w=rect.width,h=rect.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#0e151e';ctx.fillRect(0,0,w,h);const cs=state.candles;if(!cs.length){ctx.fillStyle='#8291a3';ctx.font='13px system-ui';ctx.textAlign='center';ctx.fillText(state.apiKey?'No market data loaded':'Add API key in Settings to load real candles',w/2,h/2);return}const pad={l:8,r:65,t:15,b:25},pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;const slice=cs.slice(-Math.min(65,cs.length)),lo=Math.min(...slice.map(c=>c.low)),hi=Math.max(...slice.map(c=>c.high)),range=hi-lo||1;const y=v=>pad.t+(hi-v)/range*ph;ctx.font='10px system-ui';ctx.textAlign='left';for(let i=0;i<=4;i++){const yy=pad.t+ph*i/4,val=hi-range*i/4;ctx.strokeStyle='#25313e';ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(w-pad.r+8,yy);ctx.stroke();ctx.fillStyle='#8d9bad';ctx.fillText(val.toFixed(2),w-pad.r+12,yy+3)}const step=pw/slice.length,cw=Math.max(2,Math.min(9,step*.56));slice.forEach((c,i)=>{const x=pad.l+i*step+step/2,up=c.close>=c.open;ctx.strokeStyle=up?'#41d6a0':'#ff7185';ctx.fillStyle=ctx.strokeStyle;ctx.beginPath();ctx.moveTo(x,y(c.high));ctx.lineTo(x,y(c.low));ctx.stroke();const top=y(Math.max(c.open,c.close)),bottom=y(Math.min(c.open,c.close));ctx.fillRect(x-cw/2,top,cw,Math.max(1,bottom-top))});const vals=slice.map(c=>c.close),e20=ema(vals,20),e50=ema(vals,50);function line(series,color){if(!series)return;ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=1.4;let begun=false;series.forEach((v,i)=>{if(v===null||!Number.isFinite(v))return;const x=pad.l+i*step+step/2;if(!begun){ctx.moveTo(x,y(v));begun=true}else ctx.lineTo(x,y(v))});ctx.stroke()}line(e20,'#e6bd68');line(e50,'#83b9ff');const last=slice[slice.length-1];ctx.strokeStyle='#e6bd68';ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(pad.l,y(last.close));ctx.lineTo(w-pad.r+7,y(last.close));ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#e6bd68';ctx.fillRect(w-pad.r+8,y(last.close)-9,56,18);ctx.fillStyle='#101721';ctx.fillText(last.close.toFixed(2),w-pad.r+12,y(last.close)+3);ctx.fillStyle='#8d9bad';ctx.textAlign='left';ctx.fillText(slice[0].datetime||'',pad.l,h-7);ctx.textAlign='right';ctx.fillText(last.datetime||'',w-pad.r,h-7)}
+async function loadMarket(){if(state.busy)return;if(!state.apiKey){$('marketNotice').textContent='Open Settings and add your Twelve Data API key.';$('marketNotice').classList.remove('hidden');setConnection(false,'API key required');drawChart();return}state.busy=true;$('refreshBtn').disabled=true;$('chartRefresh').disabled=true;$('marketNotice').textContent='Fetching market data from Twelve Data…';$('marketNotice').classList.remove('hidden');try{const url=new URL('https://api.twelvedata.com/time_series');url.searchParams.set('symbol',state.symbol||'XAU/USD');url.searchParams.set('interval',state.interval);url.searchParams.set('outputsize','100');url.searchParams.set('apikey',state.apiKey);const res=await fetch(url);const data=await res.json();if(!res.ok||data.status==='error'||!Array.isArray(data.values))throw new Error(data.message||`Twelve Data request failed (${res.status})`);state.candles=data.values.slice().reverse().map(v=>({datetime:v.datetime,open:Number(v.open),high:Number(v.high),low:Number(v.low),close:Number(v.close)})).filter(c=>[c.open,c.high,c.low,c.close].every(Number.isFinite));if(!state.candles.length)throw new Error('Provider returned no valid candles. Check your symbol, API plan and quota.');state.price=state.candles.at(-1).close;const cs=state.candles,last=cs.at(-1),prev=cs.at(-2),delta=prev?last.close-prev.close:0,pct=prev&&prev.close?delta/prev.close*100:0;$('price').textContent=money(state.price);$('priceSub').textContent=`Latest candle · ${last.datetime||'provider time'}`;$('change').textContent=`${delta>=0?'+':''}${money(delta)} (${pct>=0?'+':''}${pct.toFixed(2)}%)`;$('change').className='metricValue '+(delta>=0?'green':'redText');$('chartSubtitle').textContent=`${state.interval} candles · ${cs.length} returned`;$('lastUpdate').textContent=new Date().toLocaleTimeString();$('candleCount').textContent=String(cs.length);$('chartStamp').textContent=`Updated ${new Date().toLocaleTimeString()}`;$('dataTag').textContent='LIVE DATA';$('dataTag').className='tag green';$('marketNotice').textContent=`Connected to Twelve Data. Latest candle: ${last.datetime||'time not supplied'}.`;$('backendStatus').textContent='Twelve Data connected';$('healthBadge').textContent='CONNECTED';$('healthBadge').className='green';setConnection(true,'Market data connected');renderAnalysis(analyze(cs));drawChart()}catch(e){state.price=null;state.candles=[];$('price').textContent='—';$('priceSub').textContent='No valid live quote';$('change').textContent='—';$('trend').textContent='—';$('rsi').textContent='—';$('signal').textContent='WAIT';$('signal').className='signalWord goldText';$('signalTag').textContent='NO DATA';$('signalReason').textContent=e.message;$('ema20').textContent=$('ema50').textContent=$('macd').textContent=$('support').textContent=$('resistance').textContent='—';$('analysisTable').innerHTML='<tr><td colspan="4" class="empty">No live candles. No signal generated.</td></tr>';$('paperBuy').disabled=$('paperSell').disabled=true;$('dataTag').textContent='ERROR';$('dataTag').className='tag';$('candleCount').textContent='0';$('marketNotice').textContent=e.message;$('marketNotice').classList.remove('hidden');$('backendStatus').textContent=e.message;$('healthBadge').textContent='FAILED';$('healthBadge').className='redText';setConnection(false,'Market data unavailable');drawChart()}finally{state.busy=false;$('refreshBtn').disabled=false;$('chartRefresh').disabled=false}}
+function goPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===`page-${id}`));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));const labels={trading:'Trading terminal',assistant:'JARVIS assistant',paper:'Paper trade history',rooms:'Live rooms',settings:'Settings & connection'};$('topTitle').textContent=labels[id]||'Aurum';$('sidebar').classList.remove('open');if(id==='paper')loadHistory()}
+function paperTrade(action){if(!Number.isFinite(state.price)){toast('Cannot record a paper trade: no live price is available.');return}const rows=JSON.parse(localStorage.getItem('aurum_paper_history')||'[]');rows.unshift({time:new Date().toISOString(),symbol:'XAU/USD',action,price:state.price,interval:state.interval});localStorage.setItem('aurum_paper_history',JSON.stringify(rows.slice(0,100)));loadHistory();toast(`${action} paper trade recorded at ${money(state.price)}. No broker order was sent.`)}function loadHistory(){const rows=JSON.parse(localStorage.getItem('aurum_paper_history')||'[]');$('historyTable').innerHTML=rows.length?rows.map(r=>`<tr><td>${new Date(r.time).toLocaleString()}</td><td>${r.symbol}</td><td class="${r.action==='BUY'?'green':'redText'}">${r.action}</td><td>${money(Number(r.price))}</td><td>${r.interval}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">No paper trades recorded.</td></tr>'}
+async function testBackend(){if(!state.apiKey){toast('Add your Twelve Data API key in Settings.');return}await loadMarket()}
+async function sendChat(text){if(!text.trim())return;const div=document.createElement('div');div.className='message user';div.textContent=text;$('chatMessages').appendChild(div);$('chatInput').value='';const wait=document.createElement('div');wait.className='message';wait.textContent='JARVIS is thinking…';$('chatMessages').appendChild(wait);$('chatMessages').scrollTop=$('chatMessages').scrollHeight;$('sendChat').disabled=true;try{if(!state.geminiKey)throw new Error('Add a Gemini API key in Settings first.');const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(state.geminiModel)}:generateContent?key=${encodeURIComponent(state.geminiKey)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text}]}]})});const d=await res.json();if(!res.ok)throw new Error(d.error?.message||`Gemini request failed (${res.status})`);wait.textContent=d.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('')||'No response returned.'}catch(e){wait.textContent='JARVIS error: '+e.message}finally{$('sendChat').disabled=false;$('chatMessages').scrollTop=$('chatMessages').scrollHeight}}
+function stopCamera(){if(state.stream){state.stream.getTracks().forEach(t=>t.stop());state.stream=null}$('localVideo').srcObject=null;$('localVideo').style.display='none';$('videoPlaceholder').classList.remove('hidden');$('cameraStatus').textContent='Local camera preview stopped.'}
+const savedTheme=localStorage.getItem('aurum_theme')||'gold';document.body.dataset.theme=savedTheme;
+const themeControl=$('themeSelect');if(themeControl){themeControl.value=savedTheme;themeControl.addEventListener('change',e=>{document.body.dataset.theme=e.target.value;localStorage.setItem('aurum_theme',e.target.value)});}
+function openTerminal(email){$('loginScreen').classList.add('hidden');$('appShell').classList.remove('hidden');document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-trading'));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page==='trading'));$('topTitle').textContent='Trading terminal';const initials=(email.split('@')[0].match(/[a-z0-9]/ig)||['A','U']).slice(0,2).join('').toUpperCase();if($('logoutBtn')){$('logoutBtn').textContent=initials;$('logoutBtn').title='Signed in as '+email+' · Click to sign out';}$('loginError').textContent='';if(state.apiKey)loadMarket();else{setConnection(false,'API key required');drawChart();}}
+$('loginForm').addEventListener('submit',e=>{e.preventDefault();const email=$('loginEmail').value.trim();const password=$('loginPassword').value;if(!email||password.length<6){$('loginError').textContent='Enter a valid email and a password of at least 6 characters.';return}sessionStorage.setItem('aurum_demo_session',email);openTerminal(email)});
+if($('logoutBtn'))$('logoutBtn').addEventListener('click',()=>{sessionStorage.removeItem('aurum_demo_session');$('appShell').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('loginPassword').value='';$('loginEmail').value='';$('loginEmail').focus();clearInterval(state.refreshTimer);stopCamera()});
+const demoSession=sessionStorage.getItem('aurum_demo_session');if(demoSession)openTerminal(demoSession);
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>goPage(b.dataset.page)));$('mobileMenu').addEventListener('click',()=>$('sidebar').classList.toggle('open'));$('refreshBtn').addEventListener('click',loadMarket);$('chartRefresh').addEventListener('click',loadMarket);$('intervalSelect').addEventListener('change',e=>{state.interval=e.target.value;loadMarket()});$('paperBuy').addEventListener('click',()=>paperTrade('BUY'));$('paperSell').addEventListener('click',()=>paperTrade('SELL'));$('clearHistory').addEventListener('click',()=>{if(confirm('Clear all paper trade history in this browser?')){localStorage.removeItem('aurum_paper_history');loadHistory()}});$('apiForm').addEventListener('submit',e=>{e.preventDefault();state.apiKey=$('marketApiKey').value.trim();state.symbol=$('marketSymbol').value.trim()||'XAU/USD';if(state.apiKey)localStorage.setItem('aurum_twelve_key',state.apiKey);else localStorage.removeItem('aurum_twelve_key');localStorage.setItem('aurum_symbol',state.symbol);toast('Market settings saved in this browser.');loadMarket()});$('forgetBackend').addEventListener('click',()=>{state.apiKey='';state.geminiKey='';localStorage.removeItem('aurum_twelve_key');localStorage.removeItem('aurum_gemini_key');$('marketApiKey').value='';$('geminiApiKey').value='';$('backendStatus').textContent='API keys removed';$('healthBadge').textContent='NOT CONNECTED';setConnection(false,'API key required');state.price=null;state.candles=[];drawChart();toast('Saved API keys removed from this browser.')});$('saveGemini').addEventListener('click',()=>{state.geminiKey=$('geminiApiKey').value.trim();state.geminiModel=$('geminiModel').value.trim()||'gemini-2.5-flash';if(state.geminiKey)localStorage.setItem('aurum_gemini_key',state.geminiKey);else localStorage.removeItem('aurum_gemini_key');localStorage.setItem('aurum_gemini_model',state.geminiModel);toast('Gemini settings saved in this browser.')});$('chatForm').addEventListener('submit',e=>{e.preventDefault();sendChat($('chatInput').value)});$('clearChat').addEventListener('click',()=>{$('chatMessages').replaceChildren();const m=document.createElement('div');m.className='message';m.textContent='Conversation cleared in this browser view.';$('chatMessages').appendChild(m)});document.querySelectorAll('[data-room]').forEach(b=>b.addEventListener('click',()=>{$('roomPreview').classList.remove('hidden');$('roomTitle').textContent=b.dataset.room+' · Preview';$('cameraStatus').textContent='Local-only preview. No other users can join this room yet.'}));$('closeRoom').addEventListener('click',()=>{$('roomPreview').classList.add('hidden');stopCamera()});$('cameraStart').addEventListener('click',async()=>{try{if(!navigator.mediaDevices?.getUserMedia)throw new Error('Camera requires HTTPS and a supported browser.');stopCamera();state.stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});$('localVideo').srcObject=state.stream;$('localVideo').style.display='block';$('videoPlaceholder').classList.add('hidden');$('cameraStatus').textContent='Camera preview is local to this device only.'}catch(e){$('cameraStatus').textContent=e.message}});$('cameraStop').addEventListener('click',stopCamera);window.addEventListener('resize',drawChart);document.addEventListener('visibilitychange',()=>{if(document.hidden)clearInterval(state.refreshTimer);else scheduleRefresh()});function scheduleRefresh(){clearInterval(state.refreshTimer);state.refreshTimer=setInterval(()=>{if(!document.hidden&&state.apiKey)loadMarket()},30000)}
+$('marketApiKey').value=state.apiKey;$('marketSymbol').value=state.symbol;$('geminiApiKey').value=state.geminiKey;$('geminiModel').value=state.geminiModel;if(state.apiKey){loadMarket()}else{setConnection(false,'API key required');drawChart()}scheduleRefresh();
+</script>
+</body>
+</html>
